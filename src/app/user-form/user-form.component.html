@@ -1,0 +1,57 @@
+<mat-grid-list cols="3" rowHeight="1.1:1">
+  <mat-grid-tile>
+    <mat-card>
+      <mat-card-title>User Form</mat-card-title>
+      <mat-card-subtitle>Simple user form with FormGroup</mat-card-subtitle>
+      <mat-card-content>
+        <form class="form" [formGroup]="userForm">
+          <ng-container
+            *ngFor="let input of formInputs"
+            [ngTemplateOutlet]="inputField"
+            [ngTemplateOutletContext]="{ $implicit: input }"
+          ></ng-container>
+        </form>
+      </mat-card-content>
+      <mat-card-actions></mat-card-actions>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile>
+    <mat-card>
+      <mat-card-title>User Form Errors</mat-card-title>
+      <mat-card-content>
+        <pre>
+          {{ userForm.errors | json }}
+        </pre>
+      </mat-card-content>
+      <mat-card-actions></mat-card-actions>
+    </mat-card>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <mat-card>
+      <mat-card-title>User Form Values</mat-card-title>
+      <mat-card-content>
+        <pre>
+          {{ userForm.value | json }}
+        </pre>
+      </mat-card-content>
+      <mat-card-actions></mat-card-actions>
+    </mat-card>
+  </mat-grid-tile>
+</mat-grid-list>
+
+<ng-template #inputField let-data>
+  <mat-form-field class="full-width" [formGroup]="userForm">
+    <mat-label>{{ data.name }}</mat-label>
+    <input
+      [formControlName]="data?.formControlName"
+      matInput
+      [placeholder]="data?.name"
+      [name]="data?.name"
+      required
+    />
+    <mat-error>
+      {{ data?.errorMessage }}
+    </mat-error>
+  </mat-form-field>
+</ng-template>
