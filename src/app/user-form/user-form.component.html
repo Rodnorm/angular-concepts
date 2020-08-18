@@ -1,10 +1,14 @@
-<mat-grid-list cols="3" rowHeight="1.1:1">
+<mat-grid-list cols="3" rowHeight="0.7:1">
   <mat-grid-tile>
     <mat-card>
       <mat-card-title>User Form</mat-card-title>
       <mat-card-subtitle>Simple user form with FormGroup</mat-card-subtitle>
       <mat-card-content>
         <form class="form" [formGroup]="userForm">
+          <!-- 
+            ng-container is called with a *ngFor and points to a
+            template passing a context for the template to use
+            -->
           <ng-container
             *ngFor="let input of formInputs"
             [ngTemplateOutlet]="inputField"
@@ -21,7 +25,7 @@
       <mat-card-title>User Form Errors</mat-card-title>
       <mat-card-content>
         <pre>
-          {{ userForm.errors | json }}
+          {{ getAllErrors() | json }}
         </pre>
       </mat-card-content>
       <mat-card-actions></mat-card-actions>
@@ -39,6 +43,14 @@
     </mat-card>
   </mat-grid-tile>
 </mat-grid-list>
+
+<!--
+  ng-template holds a template for reusability.
+  You can call it from a ng-container, for example,
+  by using the variable attached to it through #nameOfTheVariable
+  It also has a context of it own in case you need it.
+  It can also access the same context in which it is called
+-->
 
 <ng-template #inputField let-data>
   <mat-form-field class="full-width" [formGroup]="userForm">
