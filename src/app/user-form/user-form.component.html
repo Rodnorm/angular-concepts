@@ -1,59 +1,70 @@
-<mat-grid-list cols="3" rowHeight="0.7:1">
-  <mat-grid-tile>
-    <mat-card>
-      <mat-card-title>User Form</mat-card-title>
-      <mat-card-subtitle>Simple user form with FormGroup</mat-card-subtitle>
-      <mat-card-content>
-        <form class="form" [formGroup]="userForm">
-          <!-- 
+<mat-grid-list cols="3" rowHeight="0.8:1">
+  <div class="button">
+    <button mat-raised-button color="primary" (click)="addItem()">
+      Add a form
+    </button>
+  </div>
+  <ng-container
+    *ngFor="let form of userForm.get('items')?.controls; let i = index"
+  >
+    <mat-grid-tile>
+      <mat-card>
+        <mat-card-title>User Form</mat-card-title>
+        <mat-card-subtitle>Simple user form with FormGroup</mat-card-subtitle>
+        <mat-card-content>
+          <form class="form" [formGroup]="form">
+            <!-- 
             ng-container is called with a *ngFor and points to a
             template passing a context for the template to use
             -->
-          <ng-container
-            *ngFor="let input of formInputs"
-            [ngTemplateOutlet]="inputField"
-            [ngTemplateOutletContext]="{ $implicit: input }"
-          ></ng-container>
-        </form>
-      </mat-card-content>
-      <mat-card-actions></mat-card-actions>
-    </mat-card>
-  </mat-grid-tile>
+            <ng-container
+              *ngFor="let input of formInputs"
+              [ngTemplateOutlet]="inputField"
+              [ngTemplateOutletContext]="{ $implicit: input, form: form }"
+            ></ng-container>
+          </form>
+        </mat-card-content>
+        <mat-card-actions></mat-card-actions>
+      </mat-card>
+    </mat-grid-tile>
 
-  <mat-grid-tile>
-    <mat-card>
-      <mat-card-title>User Form Errors</mat-card-title>
-      <mat-card-content>
-        <pre>
-          {{ getAllErrors() | json }}
-        </pre>
-      </mat-card-content>
-      <mat-card-actions></mat-card-actions>
-    </mat-card>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <mat-card>
-      <mat-card-title>User Form Values</mat-card-title>
-      <mat-card-content>
-        <pre>
-          {{ userForm.value | json }}
-        </pre>
-      </mat-card-content>
-      <mat-card-actions></mat-card-actions>
-    </mat-card>
-  </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-card>
+        <mat-card-title>User Form Errors</mat-card-title>
+        <mat-card-content>
+          <pre>
+          {{ getErrors(i) | json }}
+        </pre
+          >
+        </mat-card-content>
+        <mat-card-actions></mat-card-actions>
+      </mat-card>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-card>
+        <mat-card-title>User Form Values</mat-card-title>
+        <mat-card-content>
+          <pre>
+          {{ this.userForm.value.items[i] | json }}
+        </pre
+          >
+        </mat-card-content>
+        <mat-card-actions></mat-card-actions>
+      </mat-card>
+    </mat-grid-tile>
+  </ng-container>
 </mat-grid-list>
 
 <!--
   ng-template holds a template for reusability.
-  You can call it from a ng-container, for example,
+  You can call it from an ng-container, for example,
   by using the variable attached to it through #nameOfTheVariable
   It also has a context of it own in case you need it.
   It can also access the same context in which it is called
 -->
 
-<ng-template #inputField let-data>
-  <mat-form-field class="full-width" [formGroup]="userForm">
+<ng-template #inputField let-data let-form="form">
+  <mat-form-field class="full-width" [formGroup]="form">
     <mat-label>{{ data.name }}</mat-label>
     <input
       [formControlName]="data?.formControlName"

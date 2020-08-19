@@ -4,6 +4,8 @@ import {
   FormGroup,
   Validators,
   AbstractControl,
+  FormArray,
+  ValidationErrors,
 } from '@angular/forms';
 import { INPUTS } from './user-form.constants';
 
@@ -30,36 +32,14 @@ export class UserFormComponent implements OnInit {
     /**
      * The Form Builder is used here to create the reactive form.
      */
-    this.userForm = this.fb.group(
-      {
-        /**
-         * The key is the name of the Control and the
-         * param is an array with the following attributes:
-         * the first item is the initial value of the form input,
-         * the second item is the validation for the form input
-         */
-        firstName: ['', Validators.required],
-        lastName: ['', Validators.required],
-        address: '',
-        email: [
-          '',
-          [
-            Validators.required,
-            Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$'),
-          ],
-        ],
-        password: ['', Validators.required],
-        repeatPassword: ['', [Validators.required]],
-      },
+    this.userForm = new FormGroup({
       /**
-       * This validator checks wether both passwords match or not.
-       * It is purposedly added outside of the first scope so the
-       * function for validations receive de whole form as a parameter
+       * A Form Array is a list of indepents Form Groups
        */
-      { validators: this.checkPassword }
-    );
+      items: new FormArray([]),
+    });
 
-    // setTimeout(() => this.getAllErrors(), 1000);
+    this.addItem();
   }
 
   /**
@@ -78,16 +58,40 @@ export class UserFormComponent implements OnInit {
     return null;
   }
 
-  public getAllErrors() {
-    return Object.keys(this.userForm.controls).map(
-      (controlName: string) => this.userForm.get(controlName).errors
+  public getErrors(index: number): ValidationErrors {
+    return (this.userForm.get('items') as FormArray).controls[index].errors;
+  }
 
-      // {
-      //   return {
-      //     name: controlName,
-      //     error: this.userForm.get(controlName).errors,
-      //   };
-      // }
+  public addItem(): void {
+    (this.userForm.get('items') as FormArray).push(
+      this.fb.group(
+        {
+          /**
+           * The key is the name of the Control and the
+           * param is an array with the following attributes:
+           * the first item is the initial value of the form input,
+           * the second item is the validation for the form input
+           */
+          firstName: ['', Validators.required],
+          lastName: ['', Validators.required],
+          address: '',
+          email: [
+            '',
+            [
+              Validators.required,
+              Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$'),
+            ],
+          ],
+          password: ['', Validators.required],
+          repeatPassword: ['', [Validators.required]],
+        },
+        /**
+         * This validator checks wether both passwords match or not.
+         * It is purposedly added outside of the first scope so the
+         * function for validations receive de whole form as a parameter
+         */
+        { validators: this.checkPassword }
+      )
     );
   }
 }
