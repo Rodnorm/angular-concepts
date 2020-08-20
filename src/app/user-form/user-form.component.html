@@ -1,4 +1,4 @@
-<mat-grid-list cols="3" rowHeight="0.8:1">
+<mat-grid-list [cols]="gridValue.column" [rowHeight]="gridValue.height">
   <div class="button">
     <button mat-raised-button color="primary" (click)="addItem()">
       Add a form

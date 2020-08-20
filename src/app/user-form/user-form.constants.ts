@@ -30,3 +30,15 @@ export const INPUTS: {
     errorMessage: "The passwords don't match",
   },
 ];
+
+export enum GridValueForDevice {
+  'DESKTOP' = '0.8:1',
+  'DESKTOP_COLUMN' = '3',
+  'MOBILE' = '1:1.2',
+  'MOBILE_COLUMN' = '1',
+}
+
+export interface UserFormLayout {
+  height: string;
+  column: string;
+}

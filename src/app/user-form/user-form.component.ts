@@ -7,7 +7,14 @@ import {
   FormArray,
   ValidationErrors,
 } from '@angular/forms';
-import { INPUTS } from './user-form.constants';
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
+
+import {
+  INPUTS,
+  GridValueForDevice,
+  UserFormLayout,
+} from './user-form.constants';
+import { SharedService } from '../shared.service';
 
 @Component({
   selector: 'app-user-form',
@@ -16,19 +23,32 @@ import { INPUTS } from './user-form.constants';
 })
 export class UserFormComponent implements OnInit {
   /**
+   *
+   * @param fb This is a Form Builder.
+   */
+  constructor(
+    private fb: FormBuilder,
+    private breakpointObserver: BreakpointObserver,
+    private sharedService: SharedService
+  ) {
+    breakpointObserver.isMatched('max-width: 900px');
+    //
+  }
+  /**
    * * This is the form we're gonna use
    */
   public userForm: FormGroup;
 
   public formInputs = INPUTS;
 
-  /**
-   *
-   * @param fb This is a Form Builder.
-   */
-  constructor(private fb: FormBuilder) {}
+  public gridValue: UserFormLayout;
 
   ngOnInit(): void {
+    this.initializeForm();
+    this.handleLayout();
+  }
+
+  public initializeForm(): void {
     /**
      * The Form Builder is used here to create the reactive form.
      */
@@ -92,6 +112,26 @@ export class UserFormComponent implements OnInit {
          */
         { validators: this.checkPassword }
       )
+    );
+  }
+
+  /**
+   * This function subscribes to a service that is watching
+   * for width changing within the application
+   * If the width changes to less than 900px a mobile view port is added
+   */
+  public handleLayout(): void {
+    this.sharedService.changeLayout().subscribe(
+      (result: BreakpointState) =>
+        (this.gridValue = result.matches
+          ? {
+              height: GridValueForDevice.MOBILE,
+              column: GridValueForDevice.MOBILE_COLUMN,
+            }
+          : {
+              height: GridValueForDevice.DESKTOP,
+              column: GridValueForDevice.DESKTOP_COLUMN,
+            })
     );
   }
 }
