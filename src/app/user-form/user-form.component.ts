@@ -7,7 +7,7 @@ import {
   FormArray,
   ValidationErrors,
 } from '@angular/forms';
-import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
+import { BreakpointState } from '@angular/cdk/layout';
 
 import {
   INPUTS,
@@ -26,14 +26,7 @@ export class UserFormComponent implements OnInit {
    *
    * @param fb This is a Form Builder.
    */
-  constructor(
-    private fb: FormBuilder,
-    private breakpointObserver: BreakpointObserver,
-    private sharedService: SharedService
-  ) {
-    breakpointObserver.isMatched('max-width: 900px');
-    //
-  }
+  constructor(private fb: FormBuilder, private sharedService: SharedService) {}
   /**
    * * This is the form we're gonna use
    */
@@ -63,7 +56,6 @@ export class UserFormComponent implements OnInit {
   }
 
   /**
-   *
    * @param form is the whole Form Group this function either returns null or an object with an error
    */
   public checkPassword(form: AbstractControl): null | { mismatch: boolean } {
