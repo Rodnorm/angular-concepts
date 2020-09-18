@@ -3,6 +3,9 @@
     <button mat-raised-button color="primary" (click)="addItem()">
       Add a form
     </button>
+    <button mat-raised-button color="primary" (click)="sendForm()">
+      Send Form
+    </button>
   </div>
   <ng-container
     *ngFor="let form of userForm.get('items')?.controls; let i = index"

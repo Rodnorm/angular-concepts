@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -22,6 +22,12 @@ import { SharedService } from '../shared.service';
   styleUrls: ['./user-form.component.scss'],
 })
 export class UserFormComponent implements OnInit {
+  /**
+   * This is the Event Emmiter. It sends data to the parent level of the component.
+   * In this case we're stating that we'll pass an object of the type FormGroup.
+   */
+  @Output() formHandler: EventEmitter<FormGroup> = new EventEmitter();
+
   /**
    *
    * @param fb This is a Form Builder.
@@ -125,5 +131,11 @@ export class UserFormComponent implements OnInit {
               column: GridValueForDevice.DESKTOP_COLUMN,
             })
     );
+  }
+  /**
+   * Function that prepare the data for the emission using .emit($yourData)
+   */
+  public sendForm() {
+    this.formHandler.emit(this.userForm);
   }
 }
